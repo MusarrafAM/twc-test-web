@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { data } from "../constants";
-
 const Contacts = () => {
   const Navigate = useNavigate();
 
   const [contentEditable, setContentEditable] = useState(false);
   const [textBgColour, setTextBgColour] = useState("white");
   const [gender, setgender] = useState("Male");
+  const [selectedCotactId, setselectedCotactId] = useState("");
 
   // To Create the Popup Message.
   const [modelEdit, setEditModel] = useState(false);
@@ -18,14 +17,26 @@ const Contacts = () => {
 
   const [isBlurred, setIsBlurred] = useState(false);
 
+  const [allData, setAllData] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:3000/all_contacts").then((response) => {
+      setAllData(response.data);
+    });
+  }, [allData]);
+
   const toggle_Edit_Modal = () => {
     setEditModel(!modelEdit);
     setIsBlurred(false);
   };
 
-  const toggle_Delete_Modal = () => {
+  const toggle_Delete_Modal = (id) => {
     setDeleteModel(!modelDelete);
     setIsBlurred(!isBlurred);
+    setselectedCotactId(id);
+    Axios.delete("http://localhost:3000/delete", {
+      id: setselectedCotactId,
+    });
   };
 
   const final_succees_yes = () => {
@@ -119,7 +130,7 @@ const Contacts = () => {
           <p className="pl-[80px]">phone number</p>
         </div>
 
-        {data.map((item, index) => (
+        {allData.map((item, index) => (
           <div
             className="each-contact-row flex gap-[30px] items-center my-3 text-[20px] text-[#083F46]"
             key={index}
@@ -142,7 +153,7 @@ const Contacts = () => {
               className="max-w-[200px]"
               style={{ background: textBgColour }}
             >
-              {item.name}
+              {item.fullname}
             </p>
             <p
               className="absolute flex gap-3 left-[330px]"
@@ -161,9 +172,9 @@ const Contacts = () => {
             <p
               contentEditable={contentEditable}
               style={{ background: textBgColour }}
-              className="absolute left-[470px]"
+              className="absolute left-[440px]"
             >
-              {item.mail}
+              {item.email}
             </p>
             <p
               contentEditable={contentEditable}
@@ -180,7 +191,7 @@ const Contacts = () => {
               style={{ display: contentEditable ? "none" : "inline-block" }}
             />
             <img
-              onClick={toggle_Delete_Modal}
+              onClick={() => toggle_Delete_Modal(item._id)}
               className="cursor-pointer absolute left-[900px]"
               src="./src/assets/images/delete.svg"
               alt="delete-icon "

@@ -25,3 +25,6 @@ export default function App() {
     </main>
   );
 }
+
+
+// https://cdn.jsdelivr.net/npm/futura-font@1.0.0/styles.min.css

@@ -6,6 +6,10 @@ export default {
       backgroundImage: {
         "twc-bg": "url('assets/images/background-img.png')",
       },
+      fontFamily: {
+        palanquin: ["Palanquin", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
+      },
     },
   },
   plugins: [],
